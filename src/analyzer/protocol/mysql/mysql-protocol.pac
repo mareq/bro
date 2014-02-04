@@ -114,22 +114,24 @@ type MySQL_PDU(is_orig: bool) = record {
 type MySQL_Packet(pdu: MySQL_PDU) = record {
 	seq_id: uint8;
 	msg:    case pdu.is_orig of {
-		false -> server_msg: Server_Message(this);
-		true  -> client_msg: Client_Message;
-	};
+		false -> server_msg: Server_Message(this, state);
+		true  -> client_msg: Client_Message(state);
+	} &requires(state);
 
 	# In case there is trash left over from not parsing something completely.
 	blah: bytestring &restofdata;
-} &byteorder=bigendian;
+} &byteorder=bigendian &let {
+	state = $context.connection.get_state();
+};
 
-type Client_Message = case $context.connection.get_state() of {
+type Client_Message(state: int) = case state of {
 	CONNECTION_PHASE -> connection_phase: Handshake_Response_Packet;
 	COMMAND_PHASE    -> command_phase:    Command_Request_Packet;
 };
 
-type Server_Message(p: MySQL_Packet) = case p.seq_id of {
+type Server_Message(p: MySQL_Packet, state: int) = case p.seq_id of {
 	0       -> initial_handshake: Initial_Handshake_Packet;
-	default -> command_response:  Command_Response;
+	default -> Command_Responsese:  Command_Response;
 };
 
 type Initial_Handshake_Packet = record {
