@@ -192,6 +192,8 @@ bool Ascii::DoFinish(double network_time)
 		abort();
 		}
 
+	DoFlush(network_time);
+
 	ascii_done = true;
 
 	CloseFile(network_time);
@@ -259,7 +261,16 @@ bool Ascii::DoRotate(const char* rotated_path, double open, double close, bool t
 	CloseFile(close);
 
 	string nname = string(rotated_path) + "." + LogExt();
-	rename(fname.c_str(), nname.c_str());
+
+	if ( rename(fname.c_str(), nname.c_str()) != 0 )
+		{
+		char buf[256];
+		strerror_r(errno, buf, sizeof(buf));
+		Error(Fmt("failed to rename %s to %s: %s", fname.c_str(),
+		          nname.c_str(), buf));
+		FinishedRotation();
+		return false;
+		}
 
 	if ( ! FinishedRotation(nname.c_str(), fname.c_str(), open, close, terminating) )
 		{

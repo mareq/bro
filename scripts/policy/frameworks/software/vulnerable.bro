@@ -1,5 +1,5 @@
-##! Provides a variable to define vulnerable versions of software and if a
-##! a version of that software as old or older than the defined version a
+##! Provides a variable to define vulnerable versions of software and if
+##! a version of that software is as old or older than the defined version a
 ##! notice will be generated.
 
 @load base/frameworks/control
@@ -21,7 +21,7 @@ export {
 		min:  Software::Version &optional;
 		## The maximum vulnerable version.  This field is deliberately
 		## not optional because a maximum vulnerable version must
-		## always be defined.  This assumption may become incorrent
+		## always be defined.  This assumption may become incorrect
 		## if all future versions of some software are to be considered
 		## vulnerable. :)
 		max:  Software::Version;
@@ -42,15 +42,6 @@ export {
 }
 
 global internal_vulnerable_versions: table[string] of set[VulnerableVersionRange] = table();
-
-event Control::configuration_update()
-	{
-	internal_vulnerable_versions = table();
-
-	# Copy the const vulnerable versions into the global modifiable one.
-	for ( sw in vulnerable_versions )
-		internal_vulnerable_versions[sw] = vulnerable_versions[sw];
-	}
 
 function decode_vulnerable_version_range(vuln_sw: string): VulnerableVersionRange
 	{
@@ -115,9 +106,25 @@ event grab_vulnerable_versions(i: count)
 		}
 	}
 
-event bro_init()
+function update_vulnerable_sw()
 	{
+	internal_vulnerable_versions = table();
+
+	# Copy the const vulnerable versions into the global modifiable one.
+	for ( sw in vulnerable_versions )
+		internal_vulnerable_versions[sw] = vulnerable_versions[sw];
+
 	event grab_vulnerable_versions(1);
+	}
+
+event bro_init() &priority=3
+	{
+	update_vulnerable_sw();
+	}
+
+event Control::configuration_update() &priority=3
+	{
+	update_vulnerable_sw();
 	}
 
 event log_software(rec: Info)

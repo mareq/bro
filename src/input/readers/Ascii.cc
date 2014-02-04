@@ -18,7 +18,7 @@ using threading::Value;
 using threading::Field;
 
 FieldMapping::FieldMapping(const string& arg_name, const TypeTag& arg_type, int arg_position)
-	: name(arg_name), type(arg_type)
+	: name(arg_name), type(arg_type), subtype(TYPE_ERROR)
 	{
 	position = arg_position;
 	secondary_position = -1;
@@ -49,6 +49,7 @@ FieldMapping FieldMapping::subType()
 Ascii::Ascii(ReaderFrontend *frontend) : ReaderBackend(frontend)
 	{
 	file = 0;
+	mtime = 0;
 
 	separator.assign( (const char*) BifConst::InputAscii::separator->Bytes(),
 			  BifConst::InputAscii::separator->Len());
@@ -278,6 +279,9 @@ bool Ascii::DoUpdate()
 		}
 
 	string line;
+
+	file->sync();
+
 	while ( GetLine(line ) )
 		{
 		// split on tabs
@@ -320,6 +324,11 @@ bool Ascii::DoUpdate()
 				{
 				Error(Fmt("Not enough fields in line %s. Found %d fields, want positions %d and %d",
 					  line.c_str(), pos,  (*fit).position, (*fit).secondary_position));
+
+				for ( int i = 0; i < fpos; i++ )
+					delete fields[i];
+
+				delete [] fields;
 				return false;
 				}
 
