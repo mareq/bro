@@ -12,13 +12,13 @@
 
 namespace analyzer { namespace MySQL {
 
-class MYSQL_Analyzer
+class MySQL_Analyzer
 
 : public tcp::TCP_ApplicationAnalyzer {
 
 public:
-	MYSQL_Analyzer(Connection* conn);
-	virtual ~MYSQL_Analyzer();
+	MySQL_Analyzer(Connection* conn);
+	virtual ~MySQL_Analyzer();
 
 	// Overriden from Analyzer.
 	virtual void Done();
@@ -31,7 +31,7 @@ public:
 	
 
 	static analyzer::Analyzer* InstantiateAnalyzer(Connection* conn)
-		{ return new MYSQL_Analyzer(conn); }
+		{ return new MySQL_Analyzer(conn); }
 
 	static bool Available()
 		{
@@ -41,7 +41,7 @@ public:
 		}
 
 protected:
-	binpac::MYSQL::MYSQL_Conn* interp;
+	binpac::MySQL::MySQL_Conn* interp;
 	
 	bool had_gap;
 	

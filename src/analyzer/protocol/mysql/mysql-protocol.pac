@@ -204,7 +204,7 @@ type Resultset = record {
 };
 
 type ResultsetRow = record {
-	fields: LengthEncodedString[$context.connection.get_col_count];
+	fields: LengthEncodedString[$context.connection.get_col_count()];
 };
 
 type ColumnDefinition41 = record {

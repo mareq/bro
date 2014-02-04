@@ -3,7 +3,7 @@
 refine flow MySQL_Flow += {
 	function proc_mysql_message(data: bytestring): bool
 		%{
-		// BifEvent::generate_mysql_event(connection()->bro_analyzer(), connection()->bro_analyzer()->Conn());
+		BifEvent::generate_mysql_event(connection()->bro_analyzer(), connection()->bro_analyzer()->Conn());
 		return true;
 		%}
 };
