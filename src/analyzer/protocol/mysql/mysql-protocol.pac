@@ -173,11 +173,11 @@ type Command_Request_Packet = record {
 };
 
 type Command_Response = case $context.connection.get_expectation() of {
-	EXPECT_COLUMN_DEF   -> col_def      : ColumnDefinition41;
-	EXPECT_RESULTSET    -> resultset    : Resultset;
-	EXPECT_RESULTSETROW -> resultsetrow : ResultsetRow;
-	EXPECT_STATUS       -> status       : Command_Response_Status;
-	default             -> unknown      : empty;
+	EXPECT_COLUMN_DEFINITION	-> col_def      : ColumnDefinition41;
+	EXPECT_RESULTSET		-> resultset    : Resultset;
+	EXPECT_RESULTSETROW		-> resultsetrow : ResultsetRow;
+	EXPECT_STATUS			-> status       : Command_Response_Status;
+	default				-> unknown      : empty;
 };
 
 type Command_Response_Status = record {
