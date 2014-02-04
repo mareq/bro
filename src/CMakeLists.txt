@@ -286,14 +286,6 @@ set(bro_SRCS
     IPAddr.cc
     List.cc
     Reporter.cc
-<<<<<<< HEAD
-    Login.cc
-    MIME.cc
-    Modbus.cc
-    MySQL.cc
-    NCP.cc
-=======
->>>>>>> origin/master
     NFA.cc
     Net.cc
     NetVar.cc
