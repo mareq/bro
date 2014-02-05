@@ -35,9 +35,7 @@ public:
 
 	static bool Available()
 		{
-		// TODO: After you define your events, || them together here.
-		// See events.bif for more information
-		return ( mysql_event );
+		return ( mysql_command_response || mysql_server_version || mysql_debug || mysql_handshake_response || mysql_login || mysql_command_request );
 		}
 
 protected:
