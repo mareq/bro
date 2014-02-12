@@ -3,8 +3,10 @@
 refine flow MySQL_Flow += {
 	function proc_mysql_handshakev10(msg: Handshake_v10): bool
 		%{
-		BifEvent::generate_mysql_server_version(connection()->bro_analyzer(), connection()->bro_analyzer()->Conn(),
-							bytestring_to_val(${msg.server_version}));
+		if ( mysql_server_version) 
+			BifEvent::generate_mysql_server_version(connection()->bro_analyzer(), connection()->bro_analyzer()->Conn(),
+								bytestring_to_val(${msg.server_version}));
+		connection()->bro_analyzer()->ProtocolConfirmation();
 		return true;
 		%}
 
