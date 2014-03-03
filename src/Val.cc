@@ -2976,9 +2976,7 @@ VectorVal::~VectorVal()
 bool VectorVal::Assign(unsigned int index, Val* element, Opcode op)
 	{
 	if ( element &&
-	     ! same_type(element->Type(), vector_type->YieldType(), 0) &&
-			 // if we are unspecified, you can assign anything to us.
-			 ! vector_type->IsUnspecifiedVector() )
+	     ! same_type(element->Type(), vector_type->YieldType(), 0) )
 		{
 		Unref(element);
 		return false;
